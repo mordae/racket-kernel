@@ -3,7 +3,8 @@
 ; Network Interfaces
 ;
 
-(require racket/contract)
+(require racket/contract
+         racket/list)
 
 (require misc1/throw
          rtnl)
@@ -33,8 +34,8 @@
     (link-bond (-> link-index? maybe-link-index/c))
     (set-link-bond! (-> link-index? maybe-link-index/c void?))
     (link-flags (-> link-index? (listof symbol?)))
-    (set-link-flags! (-> link-index? (listof symbol?) void?))
-    (unset-link-flags! (-> link-index? (listof symbol?) void?))
+    (set-link-flags! change-link-flags-proc/c)
+    (unset-link-flags! change-link-flags-proc/c)
     (link-address (-> link-index? string?))
     (set-link-address! (-> link-index? string? void?))
     (link-broadcast (-> link-index? string?))
@@ -43,8 +44,8 @@
     (link-parent (-> link-index? maybe-link-index/c))
     (create-vlan (-> link-index? string? (integer-in 0 4095) void?))
     (vlan-flags (-> link-index? (listof symbol?)))
-    (set-vlan-flags! (-> link-index? (listof symbol?) void?))
-    (unset-vlan-flags! (-> link-index? (listof symbol?) void?))
+    (set-vlan-flags! change-link-flags-proc/c)
+    (unset-vlan-flags! change-link-flags-proc/c)
     (create-bond (-> string? void?))
     (bond-slaves (-> link-index? (listof link-index?)))
     (bond-mode (-> link-index? symbol?))
@@ -61,8 +62,8 @@
     (set-bond-xmit-hash-policy! (-> link-index? symbol? void?))
     (create-bridge (-> string? void?))
     (bridge-flags (-> link-index? (listof symbol?)))
-    (set-bridge-flags! (-> link-index? (listof symbol?) void?))
-    (unset-bridge-flags! (-> link-index? (listof symbol?) void?))
+    (set-bridge-flags! change-link-flags-proc/c)
+    (unset-bridge-flags! change-link-flags-proc/c)
     (bridge-priority (-> link-index? exact-nonnegative-integer?))
     (set-bridge-priority! (-> link-index? exact-nonnegative-integer? void?))
     (bridge-cost (-> link-index? exact-nonnegative-integer?))
@@ -71,6 +72,11 @@
 
 (define link-index?
   exact-positive-integer?)
+
+(define change-link-flags-proc/c
+  (->* (link-index?) ()
+       #:rest (listof (or/c symbol? (listof symbol?)))
+       void?))
 
 (define (link? index)
   (and (link-index? index)
@@ -176,15 +182,15 @@
   (let ((link (index->link index)))
     (rtnl-link-get-flags link)))
 
-(define (set-link-flags! index flags)
+(define (set-link-flags! index . flags)
   (check-link 'set-link-flags! index)
   (update-link (index link)
-    (rtnl-link-set-flags! link flags)))
+    (rtnl-link-set-flags! link (flatten flags))))
 
-(define (unset-link-flags! index flags)
+(define (unset-link-flags! index . flags)
   (check-link 'unset-link-flags! index)
   (update-link (index link)
-    (rtnl-link-unset-flags! link flags)))
+    (rtnl-link-unset-flags! link (flatten flags))))
 
 (define (link-address index)
   (check-link 'link-address index)
@@ -234,15 +240,15 @@
   (let ((link (index->link index)))
     (rtnl-link-vlan-get-flags link)))
 
-(define (set-vlan-flags! index flags)
+(define (set-vlan-flags! index . flags)
   (check-vlan 'set-vlan-flags! index)
   (update-link (index link)
-    (rtnl-link-vlan-set-flags! link flags)))
+    (rtnl-link-vlan-set-flags! link (flatten flags))))
 
-(define (unset-vlan-flags! index flags)
+(define (unset-vlan-flags! index . flags)
   (check-vlan 'unset-vlan-flags! index)
   (update-link (index link)
-    (rtnl-link-vlan-unset-flags! link flags)))
+    (rtnl-link-vlan-unset-flags! link (flatten flags))))
 
 (define (create-bond name)
   (let ((opts (rtnl-link-bond-alloc)))
@@ -323,15 +329,15 @@
   (let ((link (index->link index)))
     (rtnl-link-bridge-get-flags link)))
 
-(define (set-bridge-flags! index flags)
+(define (set-bridge-flags! index . flags)
   (check-bridge 'set-bridge-flags! index)
   (update-link (index link)
-    (rtnl-link-bridge-set-flags! link flags)))
+    (rtnl-link-bridge-set-flags! link (flatten flags))))
 
-(define (unset-bridge-flags! index flags)
+(define (unset-bridge-flags! index . flags)
   (check-bridge 'unset-bridge-flags! index)
   (update-link (index link)
-    (rtnl-link-bridge-unset-flags! link flags)))
+    (rtnl-link-bridge-unset-flags! link (flatten flags))))
 
 (define (bridge-priority index)
   (check-bridge 'bridge-priority index)
