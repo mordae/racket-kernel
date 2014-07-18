@@ -5,9 +5,7 @@
 
 (require racket/contract)
 
-(require misc1/syntax
-         misc1/throw
-         sysfs
+(require misc1/throw
          rtnl)
 
 (require "private/socket.rkt"

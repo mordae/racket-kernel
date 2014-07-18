@@ -3,9 +3,6 @@
 ; Linux Kernel Interface
 ;
 
-(require racket/contract
-         racket/class)
-
 (require "link.rkt"
          "address.rkt")
 

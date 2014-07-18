@@ -4,8 +4,7 @@
 ;
 
 (require
-  (for-syntax racket/base)
-  (for-syntax racket/syntax))
+  (for-syntax racket/base))
 
 (require racket/contract
          racket/string)

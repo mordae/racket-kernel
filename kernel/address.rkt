@@ -7,8 +7,7 @@
          racket/undefined
          racket/match)
 
-(require misc1/syntax
-         rtnl)
+(require rtnl)
 
 (require "private/socket.rkt"
          "link.rkt")

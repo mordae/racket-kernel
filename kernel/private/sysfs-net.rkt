@@ -3,10 +3,6 @@
 ; Network-Related sysfs Interfaces
 ;
 
-(require racket/contract)
-
-(require sysfs)
-
 (require "sysfs-util.rkt")
 
 (provide
