@@ -252,7 +252,7 @@
 
 (define (create-bond name)
   (let ((opts (rtnl-link-bond-alloc)))
-    (rtnl-link-bond-add! name opts)))
+    (rtnl-link-bond-add! socket name opts)))
 
 (define (bond-slaves index)
   (check-bond 'bond-slaves index)
