@@ -28,7 +28,7 @@
     (address-scope/name (-> address? symbol?))
     (address-flags (-> address? (listof symbol?)))
 
-    (delete-address (-> address? void?))
+    (address-delete! (-> address? void?))
     (create-address (->* (link-index? address-string?)
                          (#:peer address-string?
                           #:broadcast address-string?
@@ -82,7 +82,7 @@
     (rtnl-addr-add! socket addr)
     (address link local)))
 
-(define (delete-address a)
+(define (address-delete! a)
   (match-let (((address link local) a))
     (let ((addr (rtnl-addr-alloc))
           (local (nl-addr-parse local 'unspec)))
