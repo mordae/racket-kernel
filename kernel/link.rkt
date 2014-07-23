@@ -160,8 +160,10 @@
 (define (set-link-bridge! link-index bridge-index)
   (check-link 'set-link-bridge! link-index)
   (check-bridge 'set-link-bridge! bridge-index)
-  (update-link (link-index link)
-    (rtnl-link-set-master! link (false->zero bridge-index))))
+  (let ((old-bridge-index (link-bridge link-index)))
+    (unless (equal? old-bridge-index bridge-index)
+      (update-link (link-index link)
+        (rtnl-link-set-master! link (false->zero bridge-index))))))
 
 (define (link-bond index)
   (check-link 'link-bond index)
