@@ -42,7 +42,7 @@
     (set-link-broadcast! (-> link-index? string? void?))
     (link-carrier (-> link-index? (symbols 'up 'down)))
     (link-parent (-> link-index? maybe-link-index/c))
-    (create-vlan (-> link-index? string? (integer-in 0 4095) void?))
+    (create-vlan (-> link-index? string? (integer-in 1 4094) void?))
     (vlan-flags (-> link-index? (listof symbol?)))
     (set-vlan-flags! change-link-flags-proc/c)
     (unset-vlan-flags! change-link-flags-proc/c)
