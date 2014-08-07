@@ -202,7 +202,7 @@
 (define (set-link-address! index address)
   (check-link 'set-link-address! index)
   (update-link (index link)
-    (rtnl-link-set-addr! link (nl-addr-parse address 'unspec))))
+    (rtnl-link-set-addr! link (nl-addr-parse address 'llc))))
 
 (define (link-broadcast index)
   (check-link 'link-broadcast index)
@@ -212,7 +212,7 @@
 (define (set-link-broadcast! index address)
   (check-link 'set-link-broadcast! index)
   (update-link (index link)
-    (rtnl-link-set-addr! link (nl-addr-parse address 'unspec))))
+    (rtnl-link-set-addr! link (nl-addr-parse address 'llc))))
 
 (define (link-carrier index)
   (check-link 'link-carrier index)
